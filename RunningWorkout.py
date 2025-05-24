@@ -18,6 +18,7 @@ class RunningWorkout:
         self._messages: Optional[Dict] = None
         self._errors: Optional[List] = None
         self._metrics: Optional[Dict] = None
+        self._records: Optional[Dict] = None
 
     def parse(self) -> None:
         """
@@ -25,6 +26,7 @@ class RunningWorkout:
         """
         self._read_fit_file()
         self._metrics = self._extract_session_metrics()
+        self._records = self._extract_record_metrics()
 
     def get_metrics(self) -> Optional[Dict]:
         """
@@ -72,3 +74,29 @@ class RunningWorkout:
             'total_elapsed_time': message.get('total_elapsed_time'),
             'total_distance': message.get('total_distance')
         }
+
+    def _extract_record_metrics(self) -> Optional[List[Dict]]:
+        """
+        Extracts detailed metrics from the record messages.
+
+        Returns:
+            list: A list of dictionaries, each containing selected record metrics, or None if missing.
+        """
+        record_mesgs = self._messages.get('record_mesgs', [])
+        if not record_mesgs:
+            return None
+
+        return [
+            {
+                'timestamp': message.get('timestamp'),
+                'position_lat': message.get('position_lat'),
+                'position_long': message.get('position_long'),
+                'distance': message.get('distance'),
+                'heart_rate': message.get('heart_rate'),
+                'enhanced_speed': message.get('enhanced_speed'),
+                'enhanced_altitude': message.get('enhanced_altitude'),
+                'cadence': message.get('cadence'),
+                'power': message.get('power')
+            }
+            for message in record_mesgs
+        ]

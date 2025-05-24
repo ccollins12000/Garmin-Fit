@@ -42,6 +42,13 @@ class RunningWorkout:
         """
         return self._errors
 
+    def get_records(self) -> Optional[List[Dict]]:
+        """
+        Returns:
+            list: A list of dictionaries containing per-record running metrics, or None if not yet parsed.
+        """
+        return self._records
+
     def _read_fit_file(self) -> None:
         """
         Internal method to read and decode the FIT file.
@@ -96,7 +103,12 @@ class RunningWorkout:
                 'enhanced_speed': message.get('enhanced_speed'),
                 'enhanced_altitude': message.get('enhanced_altitude'),
                 'cadence': message.get('cadence'),
-                'power': message.get('power')
+                'power': message.get('power'),
+                'vertical_oscillation': message.get('power'),
+                'stance_time': message.get('stance_time'),
+                'vertical_ratio': message.get('vertical_ratio'),
+                'step_length': message.get('step_length'),
+                'fractional_cadence': message.get('fractional_cadence')
             }
             for message in record_mesgs
         ]
